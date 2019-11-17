@@ -145,7 +145,7 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
             score0 += take_turn(now_dice_account, score1, dice)
             if (feral_hogs and ((now_dice_account == (last_dice0_account+2)) or (now_dice_account == (last_dice0_account-2)))):
                 score0 += 3
-            if (score0 >= goal) and is_swap(score0, score1):
+            if is_swap(score0, score1):
                 score0, score1 = score1, score0
             last_dice0_account = now_dice_account
         elif player == 1:
@@ -153,14 +153,16 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
             score1 += take_turn(now_dice_account, score0, dice)
             if (feral_hogs and ((now_dice_account == (last_dice1_account+2)) or (now_dice_account == (last_dice1_account-2)))):
                 score1 += 3
-            if (score1 >= goal) and is_swap(score1, score0):
+            if is_swap(score1, score0):
                 score1, score0 = score0, score1
             last_dice1_account = now_dice_account
         player = other(player)
+        say = say(score0, score1)
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 6
     "*** YOUR CODE HERE ***"
+        # say = say(score0, score1)
     # END PROBLEM 6
     return score0, score1
 
@@ -208,7 +210,7 @@ def both(f, g):
 
     >>> h0 = both(say_scores, announce_lead_changes())
     >>> h1 = h0(10, 0)
-    Player 0 now has 10 and Player 1 now has 0
+    Player 0 now has 10 and Player 1 now has 2
     Player 0 takes the lead by 10
     >>> h2 = h1(10, 6)
     Player 0 now has 10 and Player 1 now has 6
