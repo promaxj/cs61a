@@ -5,6 +5,11 @@ from ucb import main, trace, interact
 
 GOAL_SCORE = 100  # The goal of Hog is to score 100 points.
 
+# hog game rule
+# Pig Out 骰子中只要有1个1，则得分为1
+# Free Bacon 可以选择掷0，得分为对手分数的十位数*2-个位数
+# Swine Swap 若自己分数和对手分数的十位数和个位数的差的绝对值相等，则交换分数
+
 ######################
 # Phase 1: Simulator #
 ######################
@@ -248,7 +253,30 @@ def announce_highest(who, previous_high=0, previous_score=0):
     """
     assert who == 0 or who == 1, 'The who argument should indicate a player.'
     # BEGIN PROBLEM 7
+    # What does announce_highest return?
+    # A commentary function that prints information about the biggest point increase for the current player.
+    #
+    # When does the commentary function returned by announce_highest print something out? 
+    # When the current player, given by the parameter `who`, earns their biggest point increase yet in the game.
+    # 
+    # Q: What does the parameter previous_score represent?
+    # The current player's score before this turn.
     "*** YOUR CODE HERE ***"
+    def say(score0, score1):
+        nonlocal previous_high, previous_score
+        if who == 0:
+            if score0 - previous_score > previous_high:
+                print(score0 - previous_score, "point(s)! That's the biggest gain yet for Player", who)    
+                return (announce_highest(who, score0 - previous_score, score0))
+            else:
+                return (announce_highest(who, previous_high, score0))
+        elif who == 1:
+            if score1 - previous_score > previous_high:
+                print(score1 - previous_score, "point(s)! That's the biggest gain yet for Player", who)    
+                return (announce_highest(who, score1 - previous_score, score1))
+            else:
+                return (announce_highest(who, previous_high, score1))
+    return say
     # END PROBLEM 7
 
 
