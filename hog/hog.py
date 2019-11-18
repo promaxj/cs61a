@@ -162,12 +162,12 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
                 score1, score0 = score0, score1
             last_dice1_account = now_dice_account
         player = other(player)
-        # END PROBLEM 5
-        # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
-        # BEGIN PROBLEM 6
+    # END PROBLEM 5
+    # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
+    # BEGIN PROBLEM 6
         "*** YOUR CODE HERE ***"
         say = say(score0, score1)
-        # END PROBLEM 6
+    # END PROBLEM 6
     return score0, score1
 
 
