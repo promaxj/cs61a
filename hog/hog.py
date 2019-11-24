@@ -314,8 +314,18 @@ def make_averaged(fn, num_samples=1000):
     >>> averaged_dice()
     3.0
     """
+    # Q: What makes make_averaged a higher order function?
+    # It both takes in a function as an argument and returns a function
+    # Q: How many arguments does the function passed into make_averaged take?
+    # An arbitrary amount, which is why we need to use *args to call it
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    def ret(*args):
+        sum, count = 0, 0
+        while count < num_samples:
+            sum, count = sum + fn(*args), count + 1
+        return sum / num_samples
+    return ret
     # END PROBLEM 8
 
 
@@ -328,8 +338,40 @@ def max_scoring_num_rolls(dice=six_sided, num_samples=1000):
     >>> max_scoring_num_rolls(dice)
     1
     """
+    """
+    Q: If multiple num_rolls are tied for the highest scoring average, which should you return?
+    The lowest num_rolls
+    Q:
+    from hog import *
+    dice = make_test_dice(3)   # dice always returns 3
+    max_scoring_num_rolls(dice, num_samples=1000)
+    A:10
+    Q:
+    from hog import *
+    dice = make_test_dice(2)     # dice always rolls 2
+    max_scoring_num_rolls(dice, num_samples=1000)
+    A:
+    10
+    Q:
+    from hog import *
+    dice = make_test_dice(1, 2)  # dice alternates 1 and 2
+    max_scoring_num_rolls(dice, num_samples=1000)
+    A:
+    1
+    """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    num_of_dice = 1
+    max_term = 0
+    max_of_value = 0
+    now_of_value = 0
+    while num_of_dice <= 10:
+        now_of_value = make_averaged(roll_dice, num_samples)(num_of_dice, dice)
+        if max(max_of_value, now_of_value) == now_of_value:
+            max_term = num_of_dice
+            max_of_value = now_of_value
+        num_of_dice += 1
+    return max_term
     # END PROBLEM 9
 
 
@@ -377,8 +419,51 @@ def bacon_strategy(score, opponent_score, margin=8, num_rolls=4):
     """This strategy rolls 0 dice if that gives at least MARGIN points, and
     rolls NUM_ROLLS otherwise.
     """
+    """
+    ---------------------------------------------------------------------
+    Question 10 > Suite 1 > Case 1
+    (cases remaining: 12)
+
+    >>> from hog import *
+    >>> bacon_strategy(0, 0, margin=8, num_rolls=5)
+    ? 0
+    -- OK! --
+
+    ---------------------------------------------------------------------
+    Question 10 > Suite 1 > Case 2
+    (cases remaining: 11)
+
+    >>> from hog import *
+    >>> bacon_strategy(70, 65, margin=6, num_rolls=5)
+    ? 5
+    -- OK! --
+
+    ---------------------------------------------------------------------
+    Question 10 > Suite 1 > Case 3
+    (cases remaining: 10)
+
+    >>> from hog import *
+    >>> bacon_strategy(50, 55, margin=5, num_rolls=5)
+    ? 0
+    -- OK! --
+
+    ---------------------------------------------------------------------
+    Question 10 > Suite 1 > Case 4
+    (cases remaining: 9)
+
+    >>> from hog import *
+    >>> bacon_strategy(32, 67, margin=5, num_rolls=4)
+    ? 4
+    -- OK! --
+    """
     # BEGIN PROBLEM 10
-    return 4  # Replace this statement
+    points = max((int(opponent_score / 10), int(opponent_score % 10))) + 1
+    tot_score = score + points
+    if free_bacon(opponent_score) >= margin:
+        return 0
+    else:
+        return num_rolls
+    #return 4  # Replace this statement
     # END PROBLEM 10
 
 
@@ -387,8 +472,75 @@ def swap_strategy(score, opponent_score, margin=8, num_rolls=4):
     rolls 0 dice if it gives at least MARGIN points and does not trigger a
     non-beneficial swap. Otherwise, it rolls NUM_ROLLS.
     """
+    """
+    Question 11 > Suite 1 > Case 1
+    (cases remaining: 13)
+
+    >>> from hog import *
+    >>> swap_strategy(3, 21, 8, 6)
+    ? 0
+    -- OK! --
+    ---------------------------------------------------------------------
+    Question 11 > Suite 1 > Case 2
+    (cases remaining: 12)
+
+    >>> from hog import *
+    >>> swap_strategy(30, 54, 7, 6)
+    ? 6
+    -- OK! --
+    ---------------------------------------------------------------------
+    Question 11 > Suite 1 > Case 3
+    (cases remaining: 11)
+
+    >>> from hog import *
+    >>> swap_strategy(6, 22, 100, 6)
+    ? 
+    -- Not quite. Try again! --
+
+    ? 0
+    -- OK! --
+    ---------------------------------------------------------------------
+    Question 11 > Suite 1 > Case 4
+    (cases remaining: 10)
+
+    >>> from hog import *
+    >>> swap_strategy(48, 45, 1, 6)
+    ? 6
+    -- OK! --
+    ---------------------------------------------------------------------
+    Question 11 > Suite 1 > Case 5
+    (cases remaining: 9)
+
+    >>> from hog import *
+    >>> swap_strategy(36, 43, 10, 6)
+    ? 6
+    -- OK! --
+    ---------------------------------------------------------------------
+    Question 11 > Suite 1 > Case 6
+    (cases remaining: 8)
+
+    >>> from hog import *
+    >>> swap_strategy(36, 43, 1, 6)
+    ? 0
+    -- OK! --
+    """
     # BEGIN PROBLEM 11
-    return 4  # Replace this statement
+    score += free_bacon(opponent_score)
+    if  (is_swap(score, opponent_score) and (opponent_score > score)):
+        return 0
+    elif (free_bacon(opponent_score) >= margin) and (1 - ((is_swap(score, opponent_score) and (opponent_score < score)))):
+        return 0
+    else:
+        return num_rolls
+
+    # if (is_swap(score, opponent_score) and (opponent_score > score)):
+    #     return 0
+    # # elif (1 - (is_swap(score, opponent_score) and (opponent_score < score))) and (take_turn(num_rolls, opponent_score) > margin):
+    # elif 1:
+    #     return 0
+    # else:
+    #     return num_rolls
+    #return 4  # Replace this statement
     # END PROBLEM 11
 
 
